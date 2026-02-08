@@ -1,0 +1,103 @@
+// ============================================================
+// Math Toolbox: factorial, GCD, primality, Fibonacci
+// Real use: learning, quick checks, small integer math
+// ============================================================
+
+fun factorial(n) {
+  if (n <= 1) {
+    return 1;
+  }
+  return n * factorial(n - 1);
+}
+
+// GCD by repeated subtraction (works for positive integers)
+fun gcdSub(a, b) {
+  var x = a;
+  var y = b;
+  while (x != y) {
+    if (x > y) {
+      x = x - y;
+    } else {
+      y = y - x;
+    }
+  }
+  return x;
+}
+
+fun floor(x) {
+  if (x < 0) {
+    var f = -1;
+    while (f > x) {
+      f = f - 1;
+    }
+    return f + 1;
+  }
+  var f = 0;
+  while (f + 1 <= x) {
+    f = f + 1;
+  }
+  return f;
+}
+
+fun isPrime(n) {
+  if (n <= 1) {
+    return false;
+  }
+  var d = 2;
+  while (d * d <= n) {
+    var q = floor(n / d);
+    if (n - d * q == 0) {
+      return false;
+    }
+    d = d + 1;
+  }
+  return true;
+}
+
+fun fib(n) {
+  if (n <= 0) {
+    return 0;
+  }
+  if (n == 1) {
+    return 1;
+  }
+  var a = 0;
+  var b = 1;
+  var k = 2;
+  while (k <= n) {
+    var next = a + b;
+    a = b;
+    b = next;
+    k = k + 1;
+  }
+  return b;
+}
+
+print "Math Toolbox";
+print "============";
+print "";
+
+print "Factorial(5) = ";
+print factorial(5);
+print "Factorial(10) = ";
+print factorial(10);
+print "";
+
+print "GCD(48, 18) = ";
+print gcdSub(48, 18);
+print "GCD(100, 35) = ";
+print gcdSub(100, 35);
+print "";
+
+print "Is 17 prime? ";
+print isPrime(17);
+print "Is 18 prime? ";
+print isPrime(18);
+print "Is 97 prime? ";
+print isPrime(97);
+print "";
+
+print "Fibonacci(10) = ";
+print fib(10);
+print "Fibonacci(15) = ";
+print fib(15);

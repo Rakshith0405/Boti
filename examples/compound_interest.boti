@@ -1,0 +1,52 @@
+// ============================================================
+// Compound Interest Calculator
+// Real use: savings growth, investment projection
+// ============================================================
+// Edit principal, rate (as decimal), and years below.
+
+fun pow(base, exp) {
+  var result = 1;
+  var e = exp;
+  while (e > 0) {
+    result = result * base;
+    e = e - 1;
+  }
+  return result;
+}
+
+fun futureValue(principal, rate, years) {
+  return principal * pow(1 + rate, years);
+}
+
+// --- Configuration: change these values ---
+var principal = 10000;
+var annualRate = 0.07;
+var years = 10;
+// ------------------------------------------
+
+print "Compound Interest Calculator";
+print "=============================";
+print "Principal: ";
+print principal;
+print "Annual rate: ";
+print annualRate;
+print "Years: ";
+print years;
+print "";
+
+var fv = futureValue(principal, annualRate, years);
+print "Future value: ";
+print fv;
+print "";
+
+print "Year-by-year growth:";
+print "Year | Balance";
+print "-----+--------";
+var balance = principal;
+var year = 1;
+while (year <= years) {
+  balance = balance * (1 + annualRate);
+  print year;
+  print balance;
+  year = year + 1;
+}

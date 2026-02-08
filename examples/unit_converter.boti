@@ -1,0 +1,64 @@
+// ============================================================
+// Unit Converter
+// Real use: temperature, distance, weight in daily use
+// ============================================================
+
+// --- Temperature ---
+fun celsiusToFahrenheit(c) {
+  return c * 9 / 5 + 32;
+}
+fun fahrenheitToCelsius(f) {
+  return (f - 32) * 5 / 9;
+}
+fun celsiusToKelvin(c) {
+  return c + 273.15;
+}
+
+// --- Distance (approximate) ---
+fun kmToMiles(km) {
+  return km * 0.621371;
+}
+fun milesToKm(mi) {
+  return mi * 1.60934;
+}
+
+// --- Mass ---
+fun kgToLbs(kg) {
+  return kg * 2.20462;
+}
+fun lbsToKg(lbs) {
+  return lbs / 2.20462;
+}
+
+print "Unit Converter - Sample conversions";
+print "=====================================";
+print "";
+
+print "Temperature: 25 C in F = ";
+print celsiusToFahrenheit(25);
+print "Temperature: 98.6 F in C = ";
+print fahrenheitToCelsius(98.6);
+print "Temperature: 0 C in K = ";
+print celsiusToKelvin(0);
+print "";
+
+print "Distance: 10 km in miles = ";
+print kmToMiles(10);
+print "Distance: 5 miles in km = ";
+print milesToKm(5);
+print "";
+
+print "Mass: 70 kg in lbs = ";
+print kgToLbs(70);
+print "Mass: 150 lbs in kg = ";
+print lbsToKg(150);
+print "";
+
+// Print a small C -> F table (0 to 40 C in steps of 10)
+print "C to F table (0, 10, 20, 30, 40 C):";
+var c = 0;
+while (c <= 40) {
+  print c;
+  print celsiusToFahrenheit(c);
+  c = c + 10;
+}

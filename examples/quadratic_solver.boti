@@ -1,0 +1,56 @@
+// ============================================================
+// Quadratic Equation Solver: ax^2 + bx + c = 0
+// Real use: math, physics, engineering
+// Roots: (-b +/- sqrt(b^2 - 4ac)) / (2a)
+// ============================================================
+
+fun sqrt(x) {
+  if (x <= 0) {
+    return 0;
+  }
+  var guess = x / 2;
+  var i = 0;
+  while (i < 20) {
+    guess = (guess + x / guess) / 2;
+    i = i + 1;
+  }
+  return guess;
+}
+
+fun solveQuadratic(a, b, c) {
+  var disc = b * b - 4 * a * c;
+  if (disc < 0) {
+    print "No real roots (discriminant < 0)";
+    return;
+  }
+  var s = sqrt(disc);
+  var twoA = 2 * a;
+  var r1 = (-b + s) / twoA;
+  var r2 = (-b - s) / twoA;
+  print "Root 1: ";
+  print r1;
+  print "Root 2: ";
+  print r2;
+}
+
+// --- Coefficients: ax^2 + bx + c = 0 ---
+var a = 1;
+var b = -5;
+var c = 6;
+// Example: x^2 - 5x + 6 = 0  =>  roots 3 and 2
+// -----------------------------------------
+
+print "Quadratic Solver: ";
+print a;
+print "x^2 + ";
+print b;
+print "x + ";
+print c;
+print " = 0";
+print "";
+solveQuadratic(a, b, c);
+print "";
+
+// Second example: 2x^2 + 5x - 3 = 0
+print "Second equation: 2x^2 + 5x - 3 = 0";
+solveQuadratic(2, 5, -3);

@@ -1,0 +1,65 @@
+// ============================================================
+// Investment Growth Table with simple ASCII bar
+// Real use: visualize savings/investment over time
+// ============================================================
+
+fun pow(base, exp) {
+  var result = 1;
+  var e = exp;
+  while (e > 0) {
+    result = result * base;
+    e = e - 1;
+  }
+  return result;
+}
+
+// Scale value to bar length (e.g. max 40 chars)
+fun barLength(value, maxVal, maxLen) {
+  if (maxVal <= 0) {
+    return 0;
+  }
+  var ratio = value / maxVal;
+  var len = ratio * maxLen;
+  return len;
+}
+
+// --- Config ---
+var principal = 5000;
+var rate = 0.08;
+var years = 15;
+var barMaxLen = 35;
+// --------------
+
+print "Investment Growth Table";
+print "=======================";
+print "Principal: ";
+print principal;
+print "Annual return: ";
+print rate;
+print "Years: ";
+print years;
+print "";
+
+var maxBalance = principal * pow(1 + rate, years);
+var balance = principal;
+var year = 0;
+
+print "Year | Balance   | Bar";
+print "-----+-----------+-----------------------------------";
+
+while (year <= years) {
+  var len = barLength(balance, maxBalance, barMaxLen);
+  var bar = "";
+  var i = 0;
+  while (i < len) {
+    bar = bar + "*";
+    i = i + 1;
+  }
+  print "  " + year + "  | " + balance + " | " + bar;
+  balance = balance * (1 + rate);
+  year = year + 1;
+}
+
+print "";
+print "Final balance: ";
+print balance;

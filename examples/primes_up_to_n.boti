@@ -1,0 +1,54 @@
+// ============================================================
+// List all primes up to N (trial division)
+// Real use: number theory, crypto basics, learning
+// ============================================================
+
+fun floor(x) {
+  if (x < 0) {
+    var f = -1;
+    while (f > x) {
+      f = f - 1;
+    }
+    return f + 1;
+  }
+  var f = 0;
+  while (f + 1 <= x) {
+    f = f + 1;
+  }
+  return f;
+}
+
+fun isPrime(n) {
+  if (n <= 1) {
+    return false;
+  }
+  var d = 2;
+  while (d * d <= n) {
+    var q = floor(n / d);
+    if (n - d * q == 0) {
+      return false;
+    }
+    d = d + 1;
+  }
+  return true;
+}
+
+// --- Upper limit ---
+var limit = 100;
+// -------------------
+
+print "Primes up to ";
+print limit;
+print "================";
+var n = 2;
+var count = 0;
+while (n <= limit) {
+  if (isPrime(n)) {
+    print n;
+    count = count + 1;
+  }
+  n = n + 1;
+}
+print "";
+print "Total count: ";
+print count;

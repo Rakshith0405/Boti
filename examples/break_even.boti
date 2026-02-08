@@ -1,0 +1,44 @@
+// ============================================================
+// Break-Even Analysis
+// Real use: how many units to sell to cover fixed costs?
+// Break-even units = fixed_cost / (price_per_unit - cost_per_unit)
+// ============================================================
+
+fun breakEvenUnits(fixedCost, pricePerUnit, costPerUnit) {
+  var margin = pricePerUnit - costPerUnit;
+  if (margin <= 0) {
+    return -1;
+  }
+  return fixedCost / margin;
+}
+
+fun breakEvenRevenue(fixedCost, pricePerUnit, costPerUnit) {
+  var units = breakEvenUnits(fixedCost, pricePerUnit, costPerUnit);
+  if (units < 0) {
+    return -1;
+  }
+  return units * pricePerUnit;
+}
+
+// --- Example: startup selling widgets ---
+var fixedCost = 10000;
+var pricePerUnit = 25;
+var costPerUnit = 10;
+// ---------------------------------------
+
+var units = breakEvenUnits(fixedCost, pricePerUnit, costPerUnit);
+var revenue = breakEvenRevenue(fixedCost, pricePerUnit, costPerUnit);
+
+print "Break-Even Analysis";
+print "===================";
+print "Fixed cost: ";
+print fixedCost;
+print "Price per unit: ";
+print pricePerUnit;
+print "Cost per unit: ";
+print costPerUnit;
+print "";
+print "Break-even units: ";
+print units;
+print "Break-even revenue: ";
+print revenue;

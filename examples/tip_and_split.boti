@@ -1,0 +1,42 @@
+// ============================================================
+// Tip and Bill Split Calculator
+// Real use: restaurant bill, tip %, split among people
+// ============================================================
+
+fun tipAmount(bill, tipPercent) {
+  return bill * tipPercent / 100;
+}
+
+fun totalWithTip(bill, tipPercent) {
+  return bill + tipAmount(bill, tipPercent);
+}
+
+fun perPerson(total, people) {
+  return total / people;
+}
+
+// --- Inputs ---
+var bill = 85.50;
+var tipPercent = 18;
+var people = 4;
+// --------------
+
+var tip = tipAmount(bill, tipPercent);
+var total = totalWithTip(bill, tipPercent);
+var each = perPerson(total, people);
+
+print "Tip & Split Calculator";
+print "======================";
+print "Bill: ";
+print bill;
+print "Tip %: ";
+print tipPercent;
+print "Party size: ";
+print people;
+print "";
+print "Tip amount: ";
+print tip;
+print "Total: ";
+print total;
+print "Each person pays: ";
+print each;

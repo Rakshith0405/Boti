@@ -1,0 +1,49 @@
+// ============================================================
+// Loan / Mortgage Payment Calculator
+// Real use: monthly payment for a fixed-rate loan
+// ============================================================
+// Formula: P * (r * (1+r)^n) / ((1+r)^n - 1)
+// P = principal, r = monthly rate, n = number of payments
+
+fun pow(base, exp) {
+  var result = 1;
+  var e = exp;
+  while (e > 0) {
+    result = result * base;
+    e = e - 1;
+  }
+  return result;
+}
+
+fun monthlyPayment(principal, annualRate, years) {
+  var n = years * 12;
+  var r = annualRate / 12;
+  var onePlusR = 1 + r;
+  var onePlusRN = pow(onePlusR, n);
+  return principal * (r * onePlusRN) / (onePlusRN - 1);
+}
+
+// --- Configuration: principal, annual rate (e.g. 0.06 = 6%), term in years ---
+var principal = 200000;
+var annualRate = 0.065;
+var years = 30;
+// ---------------------------------------------------------------------------
+
+var payment = monthlyPayment(principal, annualRate, years);
+print "Loan Payment Calculator";
+print "========================";
+print "Principal: ";
+print principal;
+print "Annual interest rate: ";
+print annualRate;
+print "Term (years): ";
+print years;
+print "";
+print "Monthly payment: ";
+print payment;
+print "";
+var totalPaid = payment * years * 12;
+print "Total amount paid over life of loan: ";
+print totalPaid;
+print "Total interest: ";
+print totalPaid - principal;

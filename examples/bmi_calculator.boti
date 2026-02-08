@@ -1,0 +1,53 @@
+// ============================================================
+// BMI (Body Mass Index) Calculator
+// Real use: health check, weight/height category
+// Formula: BMI = weight_kg / (height_m)^2
+// Categories: < 18.5 underweight, 18.5-24.9 normal, 25-29.9 overweight, >= 30 obese
+// ============================================================
+
+fun bmi(weightKg, heightM) {
+  return weightKg / (heightM * heightM);
+}
+
+fun category(bmiVal) {
+  if (bmiVal < 18.5) {
+    return "underweight";
+  }
+  if (bmiVal < 25) {
+    return "normal";
+  }
+  if (bmiVal < 30) {
+    return "overweight";
+  }
+  return "obese";
+}
+
+// --- Input: weight in kg, height in meters ---
+var weightKg = 70;
+var heightM = 1.75;
+// --------------------------------------------
+
+var bmiVal = bmi(weightKg, heightM);
+print "BMI Calculator";
+print "==============";
+print "Weight (kg): ";
+print weightKg;
+print "Height (m): ";
+print heightM;
+print "";
+print "BMI: ";
+print bmiVal;
+print "Category: ";
+print category(bmiVal);
+print "";
+
+// Table: several heights for same weight
+print "Same weight (70 kg) at different heights:";
+var h = 1.5;
+while (h <= 2.0) {
+  var b = bmi(70, h);
+  print h;
+  print b;
+  print category(b);
+  h = h + 0.1;
+}

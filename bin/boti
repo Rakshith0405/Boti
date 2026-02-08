@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Boti launcher – run "boti" or "boti script.boti" without exposing Java.
+
+if [ -n "$BOTI_HOME" ]; then
+  BOTI_ROOT="$BOTI_HOME"
+else
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  BOTI_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+fi
+
+NATIVE="$BOTI_ROOT/target/boti"
+JAR="$BOTI_ROOT/target/boti-1.0-SNAPSHOT.jar"
+[ ! -f "$JAR" ] && JAR="$BOTI_ROOT/lib/boti-1.0-SNAPSHOT.jar"
+BUNDLED_JAVA="$BOTI_ROOT/jre/bin/java"
+
+if [ -x "$NATIVE" ]; then
+  exec "$NATIVE" "$@"
+fi
+if [ -f "$JAR" ]; then
+  if [ -x "$BUNDLED_JAVA" ]; then
+    exec "$BUNDLED_JAVA" -jar "$JAR" "$@"
+  else
+    exec java -jar "$JAR" "$@"
+  fi
+fi
+
+echo "Boti: cannot find interpreter. Build with: mvn package" >&2
+echo "  Or set BOTI_HOME to the Boti install directory." >&2
+exit 1
