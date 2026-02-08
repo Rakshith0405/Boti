@@ -64,6 +64,26 @@ if [ "$OS" != "unknown" ]; then
   echo "  Zip (this OS): $ROOT/dist/$DIST_NAME-$OS.zip"
 fi
 
+# Optional: native binary zip for instant startup (if GraalVM is available)
+NATIVE_BIN="$ROOT/target/boti"
+if [ -x "$NATIVE_BIN" ] || ( [ -n "$JAVA_HOME" ] && [ -x "$JAVA_HOME/bin/native-image" ] 2>/dev/null ); then
+  if [ ! -x "$NATIVE_BIN" ]; then
+    echo "Building native binary for fast-start zip..."
+    cd "$ROOT" && mvn -q package -DskipTests -Pnative 2>/dev/null && cd - >/dev/null || true
+  fi
+  if [ -x "$NATIVE_BIN" ] && [ "$OS" != "unknown" ]; then
+    NATIVE_DIST="$ROOT/dist/$DIST_NAME-native"
+    rm -rf "$NATIVE_DIST"
+    mkdir -p "$NATIVE_DIST/bin"
+    cp "$NATIVE_BIN" "$NATIVE_DIST/bin/"
+    chmod +x "$NATIVE_DIST/bin/boti"
+    cd "$ROOT/dist"
+    zip -r -q "$DIST_NAME-$OS-native.zip" "$DIST_NAME-native"
+    rm -rf "$NATIVE_DIST"
+    echo "  Zip (native, instant start): $ROOT/dist/$DIST_NAME-$OS-native.zip"
+  fi
+fi
+
 echo ""
 echo "Done. Distribution:"
 echo "  Folder: $DIST"

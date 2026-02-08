@@ -18,11 +18,12 @@ if exist "%NATIVE%" (
   "%NATIVE%" %*
   exit /b
 )
+if not defined BOTI_JAVA_OPTS set "BOTI_JAVA_OPTS=-XX:TieredStopAtLevel=1 -Xms16m"
 if exist "%JAR%" (
   if exist "%BUNDLED_JAVA%" (
-    "%BUNDLED_JAVA%" -jar "%JAR%" %*
+    "%BUNDLED_JAVA%" %BOTI_JAVA_OPTS% -jar "%JAR%" %*
   ) else (
-    java -jar "%JAR%" %*
+    java %BOTI_JAVA_OPTS% -jar "%JAR%" %*
   )
   exit /b
 )

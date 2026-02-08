@@ -33,7 +33,7 @@ boti                    # REPL
 boti my_program.boti    # run a script
 ```
 
-**Requirements for this to work:** You publish a release on GitHub with the right zip files: `boti-1.0-darwin.zip` (macOS), `boti-1.0-linux.zip` (Linux), and **`boti-1.0-windows.zip`** (Windows). See **Distribution for your friends** below. Repo: [Rakshith0405/Boti](https://github.com/Rakshith0405/Boti).
+**Requirements for this to work:** Publish a release on GitHub. **Instant startup:** The repo’s GitHub Action builds and uploads **native** zips (`boti-1.0-darwin-native.zip`, `boti-1.0-linux-native.zip`) when you publish a release, so users get instant startup with **no setup**. You can also upload JVM zips manually for fallback or Windows. Repo: [Rakshith0405/Boti](https://github.com/Rakshith0405/Boti).
 
 **Manual install:** Download the zip for your OS from [GitHub Releases](https://github.com/Rakshith0405/Boti/releases), unzip it, and add the `bin` folder to your PATH. No Java or Maven needed.
 
@@ -60,8 +60,25 @@ boti examples/compound_interest.boti
 - **macOS / Linux:** use the `bin/boti` script. It runs the JAR with Java, or a native executable if you built one (see below).
 - **Windows:** use `bin\boti.bat` or add `bin` to PATH and run `boti`.
 
-**Optional – single executable (no Java required on the user’s machine):**  
-If you build a native image, the launcher will use it when present so end users don’t need Java installed. This step is **optional**; the JAR + `bin/boti` launcher is enough for normal use.
+**Why does the REPL feel slow?**  
+Running `boti` starts a JVM, which often takes 1–3 seconds. That’s normal for Java. Once the REPL is open, each line is fast (same process). For snappy startup, use a **native binary** (see below) or run scripts with `boti script.boti` so you only pay startup once per run.
+
+**Instant startup (native binary):**  
+For real fast start (milliseconds instead of 1–3 sec), build the native binary once:
+
+```bash
+# One-time: install GraalVM (e.g. SDKMAN)
+sdk install java 21.0.2-graalce
+sdk use java 21.0.2-graalce
+
+# In the Boti project
+./scripts/build-native.sh
+```
+
+Then `bin/boti` (or `target/boti`) uses the native binary and starts instantly. No JVM startup.
+
+**Optional – single executable (no Java required, faster startup):**  
+If you build a native image, the launcher will use it when present. This step is **optional**; the JAR + `bin/boti` launcher is enough for normal use.
 
 The native build **requires GraalVM** (your current JDK is a regular OpenJDK, which does not include the `gu` / native-image tool). If you see *"‘gu’ tool was not found in your JAVA_HOME"*, do one of the following:
 
@@ -93,10 +110,7 @@ You want others to **install Boti from the internet** (like Java or Python) and 
    ./scripts/build-dist.sh
    ```
 
-2. **Publish a GitHub Release:** In your repo go to **Releases** → **Create a new release**. Tag e.g. `v1.0`, and upload:
-   - **macOS:** `boti-1.0-darwin.zip` (from `./scripts/build-dist.sh` on your Mac)
-   - **Linux:** `boti-1.0-linux.zip` (from `./scripts/build-dist.sh` on Linux)
-   - **Windows:** `boti-1.0-windows.zip` — must be built **on a Windows machine** (see below). Then publish the release.
+2. **Publish a GitHub Release:** In your repo go to **Releases** → **Create a new release**. Tag e.g. `v1.0`, then **Publish release** (no need to upload anything for macOS/Linux). A GitHub Action runs automatically and uploads **native** zips (`boti-1.0-darwin-native.zip`, `boti-1.0-linux-native.zip`) so installs get **instant startup with zero setup**. Optionally upload JVM zips (`boti-1.0-darwin.zip`, etc.) for fallback, and **Windows:** build and upload `boti-1.0-windows.zip` from a Windows machine (see below).
 
 3. The install scripts already point at **Rakshith0405/Boti**. Once the release has all three zips, both the bash and PowerShell one-line installs work.
 

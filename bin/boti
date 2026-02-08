@@ -16,11 +16,13 @@ BUNDLED_JAVA="$BOTI_ROOT/jre/bin/java"
 if [ -x "$NATIVE" ]; then
   exec "$NATIVE" "$@"
 fi
+# Faster JVM startup (optional: set BOTI_JAVA_OPTS to override)
+BOTI_JAVA_OPTS="${BOTI_JAVA_OPTS:--XX:TieredStopAtLevel=1 -Xms16m}"
 if [ -f "$JAR" ]; then
   if [ -x "$BUNDLED_JAVA" ]; then
-    exec "$BUNDLED_JAVA" -jar "$JAR" "$@"
+    exec "$BUNDLED_JAVA" $BOTI_JAVA_OPTS -jar "$JAR" "$@"
   else
-    exec java -jar "$JAR" "$@"
+    exec java $BOTI_JAVA_OPTS -jar "$JAR" "$@"
   fi
 fi
 

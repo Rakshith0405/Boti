@@ -14,6 +14,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
+import org.jline.reader.EndOfFileException;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.UserInterruptException;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
+
 /**
  * Main entry point for the Boti interpreter.
  */
@@ -40,14 +47,43 @@ public final class Boti {
     }
 
     private static void runPrompt() throws IOException {
-        try (var reader = new InputStreamReader(System.in, StandardCharsets.UTF_8);
-             var bufferedReader = new BufferedReader(reader)) {
-            for (;;) {
-                System.out.print("> ");
-                String line = bufferedReader.readLine();
-                if (line == null) break;
-                run(line);
-                HadError.reset();
+        Terminal terminal = null;
+        try {
+            terminal = TerminalBuilder.builder().system(true).build();
+        } catch (Exception ignored) {
+            // Not a TTY (e.g. piped input); fall back to plain readLine
+        }
+        if (terminal != null) {
+            try {
+                LineReader lineReader = LineReaderBuilder.builder()
+                        .terminal(terminal)
+                        .build();
+                for (;;) {
+                    String line;
+                    try {
+                        line = lineReader.readLine("> ");
+                    } catch (UserInterruptException e) {
+                        continue; // Ctrl+C: clear line and prompt again
+                    } catch (EndOfFileException e) {
+                        break;    // Ctrl+D: exit
+                    }
+                    if (line == null) break;
+                    run(line.trim());
+                    HadError.reset();
+                }
+            } finally {
+                try { terminal.close(); } catch (IOException ignored) { }
+            }
+        } else {
+            try (var reader = new InputStreamReader(System.in, StandardCharsets.UTF_8);
+                 var bufferedReader = new BufferedReader(reader)) {
+                for (;;) {
+                    System.out.print("> ");
+                    String line = bufferedReader.readLine();
+                    if (line == null) break;
+                    run(line);
+                    HadError.reset();
+                }
             }
         }
     }

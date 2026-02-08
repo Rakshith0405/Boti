@@ -1,0 +1,65 @@
+# On release publish: build native Boti zips and upload them so installs get instant startup.
+# No user setup—just install from GitHub and run.
+
+name: Release (native zips)
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-native:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            os-name: darwin
+          - os: ubuntu-latest
+            os-name: linux
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up GraalVM
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '21'
+          distribution: 'graalvm-community'
+          components: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build native Boti
+        run: mvn -q package -DskipTests -Pnative
+
+      - name: Prepare version
+        id: ver
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          echo "version=${TAG#v}" >> $GITHUB_OUTPUT
+
+      - name: Create native zip
+        run: |
+          VERSION="${{ steps.ver.outputs.version }}"
+          mkdir -p dist/boti-$VERSION-native/bin
+          cp target/boti dist/boti-$VERSION-native/bin/
+          chmod +x dist/boti-$VERSION-native/bin/boti
+          cd dist
+          zip -r -q "boti-$VERSION-${{ matrix.os-name }}-native.zip" "boti-$VERSION-native"
+          cd ..
+          echo "ZIP=dist/boti-$VERSION-${{ matrix.os-name }}-native.zip" >> $GITHUB_ENV
+          echo "ASSET_NAME=boti-$VERSION-${{ matrix.os-name }}-native.zip" >> $GITHUB_ENV
+
+      - name: Upload to release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ASSET="$ZIP"
+          NAME="$ASSET_NAME"
+          REPO="${{ github.repository }}"
+          RELEASE_ID="${{ github.event.release.id }}"
+          curl -sS -X POST \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Content-Type: application/zip" \
+            --data-binary @"$ASSET" \
+            "https://uploads.github.com/repos/$REPO/releases/$RELEASE_ID/assets?name=$NAME"
