@@ -6,22 +6,36 @@ Skeleton structure for the **Boti** language interpreter. Main class: **`com.rak
 
 ## Install Boti (for people who just want to run your language)
 
-**One command** — same idea as installing Python or Java from the internet. Your friend runs this and then can use `boti`:
+**One command** — same idea as installing Python or Java from the internet.
+
+**macOS / Linux:**
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/Rakshith0405/Boti/main/scripts/install.sh | bash
 ```
 
-Then open a new terminal (or run `source ~/.zshrc` or `source ~/.bashrc`) and run:
+**Windows (PowerShell):**
+
+```powershell
+irm https://raw.githubusercontent.com/Rakshith0405/Boti/main/scripts/install.ps1 | iex
+```
+
+If you get an execution policy error, run PowerShell once as Administrator and allow scripts, or use:
+
+```powershell
+powershell -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/Rakshith0405/Boti/main/scripts/install.ps1 | iex"
+```
+
+Then open a **new** terminal and run:
 
 ```bash
 boti                    # REPL
 boti my_program.boti    # run a script
 ```
 
-**Requirements for this to work:** You publish a release on GitHub with the right zip files (see **Distribution for your friends** below). Repo: [Rakshith0405/Boti](https://github.com/Rakshith0405/Boti).
+**Requirements for this to work:** You publish a release on GitHub with the right zip files: `boti-1.0-darwin.zip` (macOS), `boti-1.0-linux.zip` (Linux), and **`boti-1.0-windows.zip`** (Windows). See **Distribution for your friends** below. Repo: [Rakshith0405/Boti](https://github.com/Rakshith0405/Boti).
 
-**Manual install:** If they prefer not to pipe a script, they can download the zip for their OS from [GitHub Releases](https://github.com/Rakshith0405/Boti/releases), unzip it, and add the `bin` folder to their PATH. No Java or Maven needed.
+**Manual install:** Download the zip for your OS from [GitHub Releases](https://github.com/Rakshith0405/Boti/releases), unzip it, and add the `bin` folder to your PATH. No Java or Maven needed.
 
 ---
 
@@ -79,11 +93,23 @@ You want others to **install Boti from the internet** (like Java or Python) and 
    ./scripts/build-dist.sh
    ```
 
-2. **Publish a GitHub Release:** In your repo go to **Releases** → **Create a new release**. Tag e.g. `v1.0`, upload `boti-1.0-darwin.zip`, `boti-1.0-linux.zip`, and (if you have it) `boti-1.0-windows.zip`. Publish.
+2. **Publish a GitHub Release:** In your repo go to **Releases** → **Create a new release**. Tag e.g. `v1.0`, and upload:
+   - **macOS:** `boti-1.0-darwin.zip` (from `./scripts/build-dist.sh` on your Mac)
+   - **Linux:** `boti-1.0-linux.zip` (from `./scripts/build-dist.sh` on Linux)
+   - **Windows:** `boti-1.0-windows.zip` — must be built **on a Windows machine** (see below). Then publish the release.
 
-3. The install script already points at **Rakshith0405/Boti**. Once you publish a release with the zips, the one-line install will work.
+3. The install scripts already point at **Rakshith0405/Boti**. Once the release has all three zips, both the bash and PowerShell one-line installs work.
 
-**Your friend then:** **Option A** — run the install one-liner from **Install Boti** above (latest release, installs to `~/.local/boti`, PATH updated). **Option B** — download the zip for their OS from your GitHub Releases, unzip, add the `bin` folder to PATH.
+**Building the Windows zip:** You need a Windows PC (or a friend’s) with JDK 21 and Maven installed. Clone the repo, then in PowerShell from the project root run:
+
+```powershell
+$env:JAVA_HOME = "C:\Program Files\Java\jdk-21"   # or your JDK 21 path
+.\scripts\build-dist.ps1
+```
+
+Upload the created **`dist/boti-1.0-windows.zip`** to the same GitHub Release. After that, Windows users can install with the PowerShell one-liner above.
+
+**Your friend then:** **Option A** — run the one-line install for their OS (see **Install Boti** above). **Option B** — download the zip for their OS from your GitHub Releases, unzip, add the `bin` folder to PATH.
 
 They never see or install Java or Maven. The unzipped folder contains `bin/`, `lib/`, and `jre/`; the launcher uses the bundled `jre/` automatically.
 
