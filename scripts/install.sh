@@ -35,6 +35,7 @@ else
 fi
 
 DOWNLOAD_URL="https://github.com/$BOTI_REPO/releases/download/${TAG}/boti-${BOTI_VERSION}-${OS}.zip"
+FALLBACK_URL="https://github.com/$BOTI_REPO/releases/download/${TAG}/boti-${BOTI_VERSION}.zip"
 echo "Downloading Boti $BOTI_VERSION for $OS..."
 echo "  $DOWNLOAD_URL"
 
@@ -44,9 +45,14 @@ cleanup() { rm -rf "$TMP_ZIP" "$TMP_DIR"; }
 trap cleanup EXIT
 
 if ! curl -sSLf -o "$TMP_ZIP" "$DOWNLOAD_URL"; then
-  echo "Download failed. Check that the release exists: https://github.com/$BOTI_REPO/releases" >&2
-  echo "You can also download the zip for your OS and unzip it, then add the bin folder to PATH." >&2
-  exit 1
+  echo "  (OS-specific zip not found, trying generic...)"
+  if ! curl -sSLf -o "$TMP_ZIP" "$FALLBACK_URL"; then
+    echo "Download failed. The release must contain one of:" >&2
+    echo "  - boti-${BOTI_VERSION}-${OS}.zip  (for this OS)" >&2
+    echo "  - boti-${BOTI_VERSION}.zip       (generic)" >&2
+    echo "See: https://github.com/$BOTI_REPO/releases" >&2
+    exit 1
+  fi
 fi
 
 unzip -q -o "$TMP_ZIP" -d "$TMP_DIR"
